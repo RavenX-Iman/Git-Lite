@@ -5,18 +5,21 @@
 #include "commit.h"
 using namespace std;
 
-string getCurrentTime() {
+string getCurrentTime()
+{
     time_t now = time(0);
-    tm* ltm = localtime(&now);
+    tm *ltm = localtime(&now);
     char buffer[80];
     strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", ltm);
     return string(buffer);
 }
 
-void vcs_commit(const string& message) {
+void vcs_commit(const string &message)
+{
     string indexPath = ".gitlite/index";
     ifstream index(indexPath);
-    if (!index) {
+    if (!index)
+    {
         cout << "Nothing to commit (index file missing or empty).\n";
         return;
     }
@@ -29,15 +32,18 @@ void vcs_commit(const string& message) {
     commitContent += "date: " + getCurrentTime() + "\n";
     commitContent += "files:\n";
 
-    while (getline(index, line)) {
-        if (!line.empty()) {
+    while (getline(index, line))
+    {
+        if (!line.empty())
+        {
             commitContent += "  " + line + "\n";
             hasFiles = true;
         }
     }
     index.close();
 
-    if (!hasFiles) {
+    if (!hasFiles)
+    {
         cout << "Nothing to commit.\n";
         return;
     }
