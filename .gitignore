@@ -1,0 +1,29 @@
+# Compiled files
+*.exe
+*.out
+*.o
+vcs
+vcs.exe
+
+# Test repositories
+TestRepo/
+MyRepo/
+DemoRepo/
+
+# IDE files
+.vscode/
+.vs/
+*.cbp
+*.layout
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Git-Lite test folders
+*/.gitlite/
+
+# Temporary files
+*.tmp
+*.log
