@@ -1,20 +1,29 @@
-# Compiled files
+# Compiled executables
 *.exe
 *.out
 *.o
 vcs
 vcs.exe
+a.exe
+a.out
+
+# Build directory
+build/
+bin/
 
 # Test repositories
 TestRepo/
 MyRepo/
 DemoRepo/
+MyFirstRepo/
+MyCppProject/
 
 # IDE files
 .vscode/
 .vs/
 *.cbp
 *.layout
+.idea/
 
 # OS files
 .DS_Store
