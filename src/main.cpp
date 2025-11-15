@@ -4,6 +4,7 @@
 #include "add.h"
 #include "commit.h"
 #include "log.h"
+#include "status.h"
 
 using namespace std;
 
@@ -41,6 +42,10 @@ int main(int argc, char* argv[]) {
 
     else if (command == "log") {
         vcs_log();
+    }
+
+    else if (command == "status") {
+    vcs_status();
     }
 
     else {
