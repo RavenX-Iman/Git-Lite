@@ -2,9 +2,11 @@
 #include <fstream>
 #include <string>
 #include "add.h"
+#include "../utils/helpers.h"
+
 using namespace std;
 
-extern void makeDir(const string&);
+// extern void makeDir(const string&);
 
 void vcs_add(const string& filename) {
     ifstream file(filename, ios::binary);

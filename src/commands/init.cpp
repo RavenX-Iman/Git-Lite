@@ -4,15 +4,18 @@
 #include <sys/stat.h>
 #include <direct.h>
 #include "init.h"
+#include "../utils/helpers.h"
+
 using namespace std;
 
-void makeDir(const string& path) {
-#ifdef _WIN32
-    _mkdir(path.c_str());
-#else
-    mkdir(path.c_str(), 0777);
-#endif
-}
+
+// void makeDir(const string& path) {
+// #ifdef _WIN32
+//     _mkdir(path.c_str());
+// #else
+//     mkdir(path.c_str(), 0777);
+// #endif
+// }
 
 void vcs_init(const string& repoName) {
     string repoPath = repoName;

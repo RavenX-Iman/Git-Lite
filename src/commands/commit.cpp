@@ -28,7 +28,7 @@ void vcs_commit(const string &message)
     bool hasFiles = false;
 
     commitContent += "message: " + message + "\n";
-    commitContent += "author: Huma Ijaz\n";
+    commitContent += "author: Eman Tahir\n";
     commitContent += "date: " + getCurrentTime() + "\n";
     commitContent += "files:\n";
 
