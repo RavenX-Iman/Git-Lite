@@ -4,6 +4,7 @@
 *.o
 vcs
 vcs.exe
+vcs_debug
 a.exe
 a.out
 
@@ -11,28 +12,45 @@ a.out
 build/
 bin/
 
-# Test repositories
-TestRepo/
-MyRepo/
-DemoRepo/
-MyFirstRepo/
-MyCppProject/
+# Test repositories (anywhere in project)
+**/DemoRepo/
+**/MyRepo/
+**/TechVault/
+**/TestRepo*/
+**/*Repo/
+
+# Personal/temp folders
+huma/
+areeba/
+eman/
+temp/
 
 # IDE files
 .vscode/
 .vs/
 *.cbp
 *.layout
+*.depend
 .idea/
+cmake-build-*/
 
 # OS files
 .DS_Store
 Thumbs.db
 desktop.ini
+*.swp
+*.swo
+*~
 
-# Git-Lite test folders
+# Git-Lite test folders (created during testing)
 */.gitlite/
 
 # Temporary files
 *.tmp
 *.log
+*.bak
+*.backup
+
+# Debug files
+*.dSYM/
+*.pdb
