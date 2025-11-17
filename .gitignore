@@ -1,4 +1,6 @@
+# -------------------------------------------------
 # Compiled executables
+# -------------------------------------------------
 *.exe
 *.out
 *.o
@@ -8,24 +10,45 @@ vcs_debug
 a.exe
 a.out
 
-# Build directory
+# -------------------------------------------------
+# Build directories
+# -------------------------------------------------
 build/
 bin/
 
-# Test repositories (anywhere in project)
+# -------------------------------------------------
+# Official example repositories (KEEP these)
+# -------------------------------------------------
+!examples/Iman/
+!examples/TechVault/
+!examples/DataForge/
+
+# Allow files inside these examples
+!examples/Iman/**
+!examples/TechVault/**
+!examples/DataForge/**
+
+# -------------------------------------------------
+# Ignore all OTHER auto-created repos in examples
+# -------------------------------------------------
+examples/*/
+!examples/.gitkeep
+!examples/README.md
+!examples/Iman/
+!examples/TechVault/
+!examples/DataForge/
+
+# -------------------------------------------------
+# Catch-all for test/demo repos anywhere
+# -------------------------------------------------
 **/DemoRepo/
 **/MyRepo/
-**/TechVault/
 **/TestRepo*/
 **/*Repo/
 
-# Personal/temp folders
-huma/
-areeba/
-eman/
-temp/
-
+# -------------------------------------------------
 # IDE files
+# -------------------------------------------------
 .vscode/
 .vs/
 *.cbp
@@ -34,7 +57,9 @@ temp/
 .idea/
 cmake-build-*/
 
+# -------------------------------------------------
 # OS files
+# -------------------------------------------------
 .DS_Store
 Thumbs.db
 desktop.ini
@@ -42,15 +67,21 @@ desktop.ini
 *.swo
 *~
 
-# Git-Lite test folders (created during testing)
+# -------------------------------------------------
+# Git-Lite internal test folders
+# -------------------------------------------------
 */.gitlite/
 
+# -------------------------------------------------
 # Temporary files
+# -------------------------------------------------
 *.tmp
 *.log
 *.bak
 *.backup
 
+# -------------------------------------------------
 # Debug files
+# -------------------------------------------------
 *.dSYM/
 *.pdb
