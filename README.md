@@ -185,6 +185,19 @@ echo "print('Hello World!')" > app.py
 # 5. View history
 ../build/vcs log
 ```
+---
+## 🆚 Comparison With Real Git
+
+
+| Feature                  | Git-Lite | Real Git |
+|--------------------------|----------|----------|
+| Hash Algorithm           | C++ hash | SHA-1 / SHA-256 |
+| Commit Structure         | Single parent | Supports merges (multiple parents) |
+| Object Types             | file snapshots | blob, tree, commit, tag |
+| Branching                | Basic pointers | refs, HEAD detaching |
+| Diffing                  | (Planned) | Efficient LCS + delta compression |
+| Storage Optimization     | None | Packfiles, compression |
+---
 
 ---
 
@@ -264,18 +277,6 @@ echo "print('Hello World!')" > app.py
 - ✅ Commits properly chain together
 - ✅ Identical content uses same object hash
 
----
-## 🆚 Comparison With Real Git
-
-
-| Feature                  | Git-Lite | Real Git |
-|--------------------------|----------|----------|
-| Hash Algorithm           | C++ hash | SHA-1 / SHA-256 |
-| Commit Structure         | Single parent | Supports merges (multiple parents) |
-| Object Types             | file snapshots | blob, tree, commit, tag |
-| Branching                | Basic pointers | refs, HEAD detaching |
-| Diffing                  | (Planned) | Efficient LCS + delta compression |
-| Storage Optimization     | None | Packfiles, compression |
 ---
 
 ## 🤝 Contributing
