@@ -35,7 +35,7 @@ This project bridges the gap between theoretical DSA concepts and practical soft
 
 ## ✨ Features
 
-### ✅ Currently Implemented
+### Currently Implemented
 
 <table>
 <tr>
