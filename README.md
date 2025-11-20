@@ -79,31 +79,72 @@ vcs commit -m "Your message"
 </td>
 <td>
 
-#### 🔄 Coming Soon™
-- `vcs log` - View commit history
-- `vcs status` - Check file states
-- `vcs rm` - Unstage/remove files
+#### 📜 History Viewing
+```bash
+vcs log
+```
+- View complete commit history
+- Shows commit hash, message, author
+- Displays parent relationships
+- Lists all files in each commit
+
+</td>
+</tr>
+<tr>
+<td colspan="2">
+
+#### 📊 Repository Status
+```bash
+vcs status
+```
+- Shows staged files ready for commit
+- Lists untracked files in working directory
+- Clean, organized output
+- Helpful usage hints
 
 </td>
 </tr>
 </table>
 
 ---
+### 🔄 Coming Soon™
+- `vcs rm` - Unstage/remove files
+- `vcs checkout` - Restore files from commits
+- `vcs branch` - Create/manage branches
+
+---
 
 ## 🏗️ Architecture
 
-### Data Structures Implementation
+### Project Structure
 ```
-┌─────────────────────────────────────────────────┐
-│               Git-Lite System                    │
-├─────────────────────────────────────────────────┤
-│                                                  │
-│  Hash Tables  →  Content-addressable storage    │
-│  Linked Lists →  Commit chain & history         │
-│  Trees        →  Directory structure & branches │
-│  File System  →  Persistent data storage        │
-│                                                  │
-└─────────────────────────────────────────────────┘
+Git-Lite/
+├── README.md                 # Project documentation
+├── LICENSE                   # MIT License
+├── .gitignore               # Git ignore rules
+│
+├── src/                     # Source code
+│   ├── main.cpp            # Entry point & command parser
+│   │
+│   ├── commands/           # Command implementations
+│   │   ├── init.cpp/.h    # Repository initialization
+│   │   ├── add.cpp/.h     # File staging
+│   │   ├── commit.cpp/.h  # Commit creation
+│   │   ├── log.cpp/.h     # History viewing
+│   │   └── status.cpp/.h  # Status checking
+│   │
+│   └── utils/              # Utility functions
+│       ├── helpers.cpp/.h # Cross-platform helpers
+│       └── (future utils) # Hash, file I/O, etc.
+│
+├── build/                   # Compiled binaries
+│   └── vcs.exe             # Executable (gitignored)
+│
+├── docs/                    # Documentation
+│   └── (future docs)       # Architecture, API, etc.
+│
+└── examples/                # Usage examples
+    └── (future examples)   # Tutorials, demos
 ```
 
 ### Repository Structure
@@ -121,6 +162,19 @@ MyProject/
     └── branches/                 # Branch references
         └── main                  # Points to latest commit
 ```
+### Data Structures Implementation
+```
+┌─────────────────────────────────────────────────┐
+│               Git-Lite System                   │
+├─────────────────────────────────────────────────┤
+│                                                 │
+│  Hash Tables  →  Content-addressable storage    │
+│  Linked Lists →  Commit chain & history         │
+│  Trees        →  Directory structure & branches │
+│  File System  →  Persistent data storage        │
+│                                                 │
+└─────────────────────────────────────────────────┘
+```
 
 ### How It Works
 ```mermaid
@@ -131,6 +185,10 @@ graph LR
     D -->|forms| E[Commit History]
 ```
 
+> 📚 **Deep Dive:** For comprehensive architecture documentation including detailed data flow, implementation specifics, and algorithm explanations, see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
+
+---
+
 ---
 
 ## 🚀 Quick Start
@@ -138,11 +196,13 @@ graph LR
 ### Prerequisites
 ```bash
 # Windows
-- MinGW GCC/G++ compiler
+- MinGW GCC/G++ compiler (8.1.0 or higher)
+- C++17 support
 - Visual Studio Code (recommended)
 
 # Linux/Mac  
-- GCC/G++ (usually pre-installed)
+- GCC/G++ (7.0 or higher)
+- C++17 support
 - Any text editor
 ```
 
@@ -152,68 +212,82 @@ graph LR
 git clone https://github.com/RavenX-Iman/Git-Lite.git
 cd Git-Lite
 
-# Compile the program
+# Create build directory and compile
+mkdir build
+
 # Windows
-g++ vcsf.cpp -o vcs.exe
+g++ vcsf.cpp -o build/vcs.exe
 
 # Linux/Mac
-g++ vcsf.cpp -o vcs
-chmod +x vcs
+g++ vcsf.cpp -o build/vcs
+chmod +x build/vcs
 ```
 
 ### First Steps
 ```bash
 # 1. Initialize a new repository
-./vcs init MyFirstRepo
-# Output: Initialized empty Git-Lite repository in MyFirstRepo/.gitlite
+build/vcs init TechVault
+cd TechVault
 
-# 2. Create a file and add it
-echo "Hello, Git-Lite!" > test.txt
-./vcs add test.txt
-# Output: Added test.txt to staging area.
+# 2. Create and add files
+echo "print('Hello World!')" > app.py
+../build/vcs add app.py
 
-# 3. Commit your changes
-./vcs commit -m "Initial commit"
-# Output: Committed as 1234567890: Initial commit
+# 3. Check status
+../build/vcs status
+
+# 4. Commit your changes
+../build/vcs commit -m "Initial commit"
+
+# 5. View history
+../build/vcs log
 ```
 
 ---
 
 ## 💻 Usage
 
-### Basic Workflow
+### Complete Workflow Example
 ```bash
 # Initialize repository
-vcs init ProjectName
+build/vcs init MyProject
+cd MyProject
+
+# Create files
+echo "# MyProject" > README.md
+echo "print('Hello')" > main.py
+echo "def helper(): pass" > utils.py
+
+# Check what's untracked
+../build/vcs status
 
 # Stage files
-vcs add file1.txt
-vcs add file2.cpp
-vcs add *.h                    # Multiple files
+../build/vcs add README.md
+../build/vcs add main.py
 
-# Create commit
-vcs commit -m "Descriptive message here"
+# Check status again
+../build/vcs status
 
-# Reinitialize (safe operation)
-vcs init ProjectName           # Detects existing repo
+# Commit
+../build/vcs commit -m "Initial commit: Added README and main"
+
+# Add more files
+../build/vcs add utils.py
+../build/vcs commit -m "Added utility functions"
+
+# View history
+../build/vcs log
 ```
 
-### Advanced Examples
-```bash
-# Track a C++ project
-vcs init MyCppProject
-vcs add main.cpp
-vcs add utils.h utils.cpp
-vcs commit -m "Add main program and utilities"
+### Command Reference
 
-# Make changes and commit again
-# Edit main.cpp...
-vcs add main.cpp
-vcs commit -m "Fix bug in main function"
-
-# Each commit creates a new node in the history chain
-```
-
+| Command | Description | Example |
+|---------|-------------|---------|
+| `vcs init <name>` | Create new repository | `vcs init MyRepo` |
+| `vcs add <file>` | Stage a file | `vcs add main.cpp` |
+| `vcs commit -m "msg"` | Commit staged files | `vcs commit -m "Fixed bug"` |
+| `vcs log` | View commit history | `vcs log` |
+| `vcs status` | Check repository status | `vcs status` |
 ---
 
 ## 🧮 Algorithm Complexity
@@ -223,6 +297,8 @@ vcs commit -m "Fix bug in main function"
 | `init` | O(1) | O(1) | Directory creation only |
 | `add` | O(n) | O(n) | n = file size (hashing + I/O) |
 | `commit` | O(m) | O(m) | m = staged files count |
+| `log` | O(c) | O(1) | c = commit count |
+| `status` | O(f) | O(f) | f = files in directory |
 | Hash Lookup | O(1) avg | O(k) | k = object size |
 | History Traversal* | O(c) | O(1) | c = commit count |
 
@@ -257,6 +333,18 @@ struct Commit {
     vector<string> files;  // File snapshots
 };
 ```
+### Cross-Platform Compatibility"
+*(Tested on Windows, designed for cross-platform)*"
+```cpp
+// Windows & Linux support
+#ifdef _WIN32
+    #include <windows.h>
+    // Windows-specific code
+#else
+    #include <dirent.h>
+    // POSIX-specific code
+#endif
+```
 
 ### File Format
 ```
@@ -287,7 +375,6 @@ files:
 ✅ Algorithm design and complexity analysis  
 ✅ Software architecture and modular design  
 ✅ Version control system internals  
-
 
 
 ## 👥 Authors
@@ -322,8 +409,8 @@ Phase 1: Core Functions ━━━━━━━━━━━━━━━━━━�
 ├── Repository initialization        ✅
 ├── File staging system              ✅  
 ├── Commit creation                  ✅
-├── History viewing (log)            🔄
-└── Status checking                  📋
+├── History viewing (log)            ✅
+└── Status checking                  ✅
 
 Phase 2: Advanced Features ━━━━━━━━━━━━━━━━━━━━  0%
 ├── Checkout & restoration           📋
@@ -345,27 +432,29 @@ Phase 3: Optimization ━━━━━━━━━━━━━━━━━━━�
 
 ## 🧪 Testing
 
-### Manual Testing Suite
+### Test Suite Results
 ```bash
-# Test Case 1: Fresh initialization
-vcs init TestRepo
+✅ Repository initialization
+✅ File staging with duplicate detection
+✅ Commit chain with parent linking
+✅ Log display with full history
+✅ Status showing staged/untracked files
+```
+
+### Manual Testing Example
+```bash
+# All tests passing ✅
+build/vcs init TestRepo     # Creates .gitlite structure
 cd TestRepo
+echo "test" > file.txt
+../build/vcs add file.txt   # Adds to staging
+../build/vcs status         # Shows staged file
+../build/vcs commit -m "T"  # Creates commit
+../build/vcs log            # Displays history
+```
 
-# Test Case 2: Adding multiple files
-echo "First" > file1.txt
-echo "Second" > file2.txt
-vcs add file1.txt
-vcs add file2.txt
+---
 
-# Test Case 3: Commit chain
-vcs commit -m "First commit"
-echo "Modified" > file1.txt
-vcs add file1.txt
-vcs commit -m "Second commit"
-
-# Test Case 4: Duplicate content
-echo "First" > file3.txt  # Same as file1
-vcs add file3.txt          # Should reuse hash
 ```
 
 ### Expected Behavior
@@ -409,20 +498,33 @@ vcsf.cpp
 
 ## 🤝 Contributing
 
-We welcome contributions! Here's how you can help:
+We welcome contributions from students, developers, and anyone interested in version control!
 
-### For Students & Learners
-1. 🐛 **Report Bugs**: Found an issue? Open a GitHub issue
-2. 💡 **Suggest Features**: Ideas for improvement? Let us know
-3. 📚 **Improve Docs**: Help make our documentation clearer
-4. ✨ **Add Examples**: Share interesting use cases
+### Quick Contributing Guide
 
-### For Developers
+**For Students & Learners:**
+- 🐛 **Report Bugs** - Found an issue? Open a GitHub issue
+- 💡 **Suggest Features** - Ideas for improvement? Let us know
+- 📚 **Improve Docs** - Help make our documentation clearer
+- ✨ **Add Examples** - Share interesting use cases
+
+**For Developers:**
+```bash
+# Quick start
+git clone https://github.com/RavenX-Iman/Git-Lite.git
+cd Git-Lite
+g++ vcsf.cpp -o build/vcs
+```
+
+**Contribution Steps:**
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes and test thoroughly
+4. Commit with clear messages (`git commit -m 'Add: feature description'`)
+5. Push and open a Pull Request
+
+> 📚 **Full Guidelines:** See [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) for detailed code style, testing procedures, commit message format, and complete contribution workflow.
+
 
 ---
 

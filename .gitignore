@@ -1,38 +1,87 @@
+# -------------------------------------------------
 # Compiled executables
+# -------------------------------------------------
 *.exe
 *.out
 *.o
 vcs
 vcs.exe
+vcs_debug
 a.exe
 a.out
 
-# Build directory
+# -------------------------------------------------
+# Build directories
+# -------------------------------------------------
 build/
 bin/
 
-# Test repositories
-TestRepo/
-MyRepo/
-DemoRepo/
-MyFirstRepo/
-MyCppProject/
+# -------------------------------------------------
+# Official example repositories (KEEP these)
+# -------------------------------------------------
+!examples/Iman/
+!examples/TechVault/
+!examples/DataForge/
 
+# Allow files inside these examples
+!examples/Iman/**
+!examples/TechVault/**
+!examples/DataForge/**
+
+# -------------------------------------------------
+# Ignore all OTHER auto-created repos in examples
+# -------------------------------------------------
+examples/*/
+!examples/.gitkeep
+!examples/README.md
+!examples/Iman/
+!examples/TechVault/
+!examples/DataForge/
+
+# -------------------------------------------------
+# Catch-all for test/demo repos anywhere
+# -------------------------------------------------
+**/DemoRepo/
+**/MyRepo/
+**/TestRepo*/
+**/*Repo/
+
+# -------------------------------------------------
 # IDE files
+# -------------------------------------------------
 .vscode/
 .vs/
 *.cbp
 *.layout
+*.depend
 .idea/
+cmake-build-*/
 
+# -------------------------------------------------
 # OS files
+# -------------------------------------------------
 .DS_Store
 Thumbs.db
 desktop.ini
+*.swp
+*.swo
+*~
 
-# Git-Lite test folders
+# -------------------------------------------------
+# Git-Lite internal test folders
+# -------------------------------------------------
 */.gitlite/
 
+# -------------------------------------------------
 # Temporary files
+# -------------------------------------------------
 *.tmp
 *.log
+*.bak
+*.backup
+
+# -------------------------------------------------
+# Debug files
+# -------------------------------------------------
+*.dSYM/
+*.pdb
