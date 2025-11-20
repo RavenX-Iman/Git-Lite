@@ -1,4 +1,22 @@
 # Git-Lite Architecture
+## 📑 Table of Contents
+
+1. [System Overview](#-system-overview)
+2. [Design Philosophy](#-design-philosophy)
+3. [Core Components](#-core-components)
+   - [Storage Layer (Hash Tables)](#1-storage-layer-hash-tables)
+   - [History Layer (Linked Lists)](#2-history-layer-linked-lists)
+   - [Staging Layer (Index)](#3-staging-layer-index)
+   - [Branch Management (Tree Structure)](#4-branch-management-tree-structure)
+4. [Data Flow](#-data-flow)
+5. [Repository Structure](#-repository-structure)
+6. [Algorithm Complexity](#-algorithm-complexity)
+7. [Implementation Details](#-implementation-details)
+8. [Future Enhancements](#-future-enhancements)
+9. [Key Learnings](#-key-learnings)
+10. [Academic Context](#-academic-context)
+11. [References](#-references)
+
 
 ## 📖 System Overview
 
@@ -17,6 +35,7 @@ Git-Lite bridges the gap between theoretical DSA concepts and practical software
 - Applying **dynamic programming** for file comparison (planned)
 
 ---
+
 
 ## 🏗️ Core Components
 
@@ -194,6 +213,20 @@ Create:
    - Staged files (in index)
    - Untracked files (not in index)
 ```
+## 🧩 Core Data Structures
+
+### 🔹 Commit Object
+Defines versioning history using a linked-list model.
+
+### 🔹 Index (Staging Area) Map
+A lightweight `<filename, hash>` mapping.
+
+### 🔹 Hash Table (C++ std::unordered_map)
+Used for fast content lookup and deduplication.
+
+### 🔹 File Snapshot Structure
+A list of <hash, filename> stored inside each commit object.
+
 
 ---
 
