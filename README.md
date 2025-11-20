@@ -107,62 +107,15 @@ vcs status
 </table>
 
 ---
-### 🔄 Coming Soon™
+### 🔄 Future Enhancements™
 - `vcs rm` - Unstage/remove files
 - `vcs checkout` - Restore files from commits
 - `vcs branch` - Create/manage branches
 
----
 
-## 🏗️ Architecture
 
-### Project Structure
-```
-Git-Lite/
-├── README.md                 # Project documentation
-├── LICENSE                   # MIT License
-├── .gitignore               # Git ignore rules
-│
-├── src/                     # Source code
-│   ├── main.cpp            # Entry point & command parser
-│   │
-│   ├── commands/           # Command implementations
-│   │   ├── init.cpp/.h    # Repository initialization
-│   │   ├── add.cpp/.h     # File staging
-│   │   ├── commit.cpp/.h  # Commit creation
-│   │   ├── log.cpp/.h     # History viewing
-│   │   └── status.cpp/.h  # Status checking
-│   │
-│   └── utils/              # Utility functions
-│       ├── helpers.cpp/.h # Cross-platform helpers
-│       └── (future utils) # Hash, file I/O, etc.
-│
-├── build/                   # Compiled binaries
-│   └── vcs.exe             # Executable (gitignored)
-│
-├── docs/                    # Documentation
-│   └── (future docs)       # Architecture, API, etc.
-│
-└── examples/                # Usage examples
-    └── (future examples)   # Tutorials, demos
-```
-
-### Repository Structure
-```
-MyProject/
-└── .gitlite/
-    ├── HEAD                      # Current branch pointer
-    ├── index                     # Staging area
-    ├── objects/                  # Content storage (hash-indexed)
-    │   ├── 1234567890           # File snapshots
-    │   └── 9876543210
-    ├── commits/                  # Commit metadata
-    │   ├── abc123.txt           # Commit objects
-    │   └── def456.txt
-    └── branches/                 # Branch references
-        └── main                  # Points to latest commit
-```
 ### Data Structures Implementation
+
 ```
 ┌─────────────────────────────────────────────────┐
 │               Git-Lite System                   │
@@ -174,20 +127,10 @@ MyProject/
 │  File System  →  Persistent data storage        │
 │                                                 │
 └─────────────────────────────────────────────────┘
+
 ```
 
-### How It Works
-```mermaid
-graph LR
-    A[Working Directory] -->|vcs add| B[Staging Area]
-    B -->|vcs commit| C[Commit Object]
-    C -->|linked to| D[Parent Commit]
-    D -->|forms| E[Commit History]
-```
-
-> 📚 **Deep Dive:** For comprehensive architecture documentation including detailed data flow, implementation specifics, and algorithm explanations, see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
-
----
+ 📚 **Deep Dive:** For comprehensive architecture documentation including detailed data flow, implementation specifics, and algorithm explanations, see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
 
 ---
 
@@ -245,40 +188,6 @@ echo "print('Hello World!')" > app.py
 
 ---
 
-## 💻 Usage
-
-### Complete Workflow Example
-```bash
-# Initialize repository
-build/vcs init MyProject
-cd MyProject
-
-# Create files
-echo "# MyProject" > README.md
-echo "print('Hello')" > main.py
-echo "def helper(): pass" > utils.py
-
-# Check what's untracked
-../build/vcs status
-
-# Stage files
-../build/vcs add README.md
-../build/vcs add main.py
-
-# Check status again
-../build/vcs status
-
-# Commit
-../build/vcs commit -m "Initial commit: Added README and main"
-
-# Add more files
-../build/vcs add utils.py
-../build/vcs commit -m "Added utility functions"
-
-# View history
-../build/vcs log
-```
-
 ### Command Reference
 
 | Command | Description | Example |
@@ -290,20 +199,6 @@ echo "def helper(): pass" > utils.py
 | `vcs status` | Check repository status | `vcs status` |
 ---
 
-## 🧮 Algorithm Complexity
-
-| Operation | Time Complexity | Space Complexity | Notes |
-|-----------|----------------|------------------|-------|
-| `init` | O(1) | O(1) | Directory creation only |
-| `add` | O(n) | O(n) | n = file size (hashing + I/O) |
-| `commit` | O(m) | O(m) | m = staged files count |
-| `log` | O(c) | O(1) | c = commit count |
-| `status` | O(f) | O(f) | f = files in directory |
-| Hash Lookup | O(1) avg | O(k) | k = object size |
-| History Traversal* | O(c) | O(1) | c = commit count |
-
-*Future implementation
-
 ### Storage Efficiency
 
 - **Deduplication**: Identical files stored once (content-addressed)
@@ -312,27 +207,7 @@ echo "def helper(): pass" > utils.py
 
 ---
 
-## 🛠️ Technical Details
 
-### Hash-Based Storage
-```cpp
-// Content → Hash → Storage
-size_t hashValue = hash<string>{}(fileContent);
-string objectId = to_string(hashValue);
-string objectPath = ".gitlite/objects/" + objectId;
-```
-
-### Commit Chain Structure
-```cpp
-struct Commit {
-    string hash;           // Unique identifier
-    string parent;         // Previous commit (linked list)
-    string message;        // User description
-    string author;         // Commit author
-    string timestamp;      // Creation time
-    vector<string> files;  // File snapshots
-};
-```
 ### Cross-Platform Compatibility"
 *(Tested on Windows, designed for cross-platform)*"
 ```cpp
@@ -345,28 +220,6 @@ struct Commit {
     // POSIX-specific code
 #endif
 ```
-
-### File Format
-```
-commit: 1234567890
-parent: null
-message: Initial commit
-author: Huma Ijaz
-date: 2025-11-15 10:30:00
-files:
-  9876543210 file1.txt
-  5555555555 file2.cpp
-```
-
----
-
-## 🎓 Academic Context
-
-**Course:** Data Structures  
-**Institution:** COMSATS University Islamabad, Sahiwal Campus  
-**Department:** Software Engineering  
-**Session:** Fall 2025  
-**Supervisor:** Shaheen Kausar
 
 ### Learning Objectives Met
 
@@ -401,61 +254,7 @@ files:
 </tr>
 </table>
 
----
 
-## 🗺️ Project Roadmap
-```
-Phase 1: Core Functions ━━━━━━━━━━━━━━━━━━━━━━━━ 30% ✅
-├── Repository initialization        ✅
-├── File staging system              ✅  
-├── Commit creation                  ✅
-├── History viewing (log)            ✅
-└── Status checking                  ✅
-
-Phase 2: Advanced Features ━━━━━━━━━━━━━━━━━━━━  0%
-├── Checkout & restoration           📋
-├── Branch management                📋
-├── File comparison (diff)           📋
-├── Merge functionality              📋
-└── Conflict resolution              📋
-
-Phase 3: Optimization ━━━━━━━━━━━━━━━━━━━━━━━━━  0%
-├── Performance tuning               📋
-├── Memory optimization              📋
-├── Compression support              📋
-└── Large file handling              📋
-```
-
-**Legend:** ✅ Complete | 🔄 In Progress | 📋 Planned
-
----
-
-## 🧪 Testing
-
-### Test Suite Results
-```bash
-✅ Repository initialization
-✅ File staging with duplicate detection
-✅ Commit chain with parent linking
-✅ Log display with full history
-✅ Status showing staged/untracked files
-```
-
-### Manual Testing Example
-```bash
-# All tests passing ✅
-build/vcs init TestRepo     # Creates .gitlite structure
-cd TestRepo
-echo "test" > file.txt
-../build/vcs add file.txt   # Adds to staging
-../build/vcs status         # Shows staged file
-../build/vcs commit -m "T"  # Creates commit
-../build/vcs log            # Displays history
-```
-
----
-
-```
 
 ### Expected Behavior
 
@@ -467,34 +266,6 @@ echo "test" > file.txt
 
 ---
 
-## 🔧 Development
-
-### Building from Source
-```bash
-# Debug build
-g++ -g -Wall vcsf.cpp -o vcs_debug
-
-# Optimized build
-g++ -O3 vcsf.cpp -o vcs
-
-# With all warnings
-g++ -Wall -Wextra -pedantic vcsf.cpp -o vcs
-```
-
-### Code Structure
-```cpp
-vcsf.cpp
-├── Helper Functions
-│   └── makeDir()              // Cross-platform directory creation
-├── Core Commands  
-│   ├── vcs_init()            // Repository initialization
-│   ├── vcs_add()             // File staging
-│   └── vcs_commit()          // Snapshot creation
-└── Main Entry
-    └── Command parser & dispatcher
-```
-
----
 
 ## 🤝 Contributing
 
@@ -586,22 +357,6 @@ A: Simplified algorithms, no network features, basic data structures.
 
 **Q: Can I contribute?**  
 A: Absolutely! See the [Contributing](#-contributing) section.
-
----
-
-## 🎯 Success Metrics
-
-- ✅ Successfully implements 3 core VCS operations
-- ✅ Demonstrates understanding of hash tables and linked lists
-- ✅ Includes proper documentation and testing
-- ✅ Shows complexity analysis and optimization
-- 🎯 **Target Grade: A**
-
----
-
-## 📧 Contact
-
-**Project Link:** [https://github.com/RavenX-Iman/Git-Lite](https://github.com/RavenX-Iman/Git-Lite)
 
 
 ---
