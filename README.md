@@ -131,60 +131,7 @@ vcs status
 ```
 
  📚 **Deep Dive:** For comprehensive architecture documentation including detailed data flow, implementation specifics, and algorithm explanations, see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
-
----
-
-## 🚀 Quick Start
-
-### Prerequisites
-```bash
-# Windows
-- MinGW GCC/G++ compiler (8.1.0 or higher)
-- C++17 support
-- Visual Studio Code (recommended)
-
-# Linux/Mac  
-- GCC/G++ (7.0 or higher)
-- C++17 support
-- Any text editor
-```
-
-### Installation
-```bash
-# Clone the repository
-git clone https://github.com/RavenX-Iman/Git-Lite.git
-cd Git-Lite
-
-# Create build directory and compile
-mkdir build
-
-# Windows
-g++ vcsf.cpp -o build/vcs.exe
-
-# Linux/Mac
-g++ vcsf.cpp -o build/vcs
-chmod +x build/vcs
-```
-
-### First Steps
-```bash
-# 1. Initialize a new repository
-build/vcs init TechVault
-cd TechVault
-
-# 2. Create and add files
-echo "print('Hello World!')" > app.py
-../build/vcs add app.py
-
-# 3. Check status
-../build/vcs status
-
-# 4. Commit your changes
-../build/vcs commit -m "Initial commit"
-
-# 5. View history
-../build/vcs log
-```
+ 
 ---
 ## 🆚 Comparison With Real Git
 
