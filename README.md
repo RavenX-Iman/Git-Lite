@@ -111,17 +111,17 @@ File System  →  Persistent object storage
 <table>
 <tr>
 <td align="center" width="33%">
-<img src="https://github.com/RavenX-Iman.png" width="100px;" alt="Eman Tahir"/><br />
+<img src="https://github.com/RavenX-Iman.png" width="150px;" alt="Eman Tahir"/><br />
 <b>Eman Tahir</b><br />
 <a href="https://github.com/RavenX-Iman">@RavenX-Iman</a><br />
 </td>
 <td align="center" width="33%">
-<img src="https://github.com/Huma-Ijaz.png" width="100px;" alt="Huma Ijaz"/><br />
+<img src="https://github.com/Huma-Ijaz.png" width="150px;" alt="Huma Ijaz"/><br />
 <b>Huma Ijaz</b><br />
 <a href="https://github.com/Huma-Ijaz">@Huma-Ijaz</a><br />
 </td>
 <td align="center" width="33%">
-<img src="https://github.com/areebactech.png" width="100px;" alt="Areeba Asif"/><br />
+<img src="https://github.com/areebactech.png" width="150px;" alt="Areeba Asif"/><br />
 <b>Areeba Asif</b><br />
 <a href="https://github.com/areebactech">@areebactech</a><br />
 </td>
@@ -142,7 +142,7 @@ Supervisor: Shaheen Kausar
 - **[Git Internals](https://git-scm.com/book/en/v2/Git-Internals-Plumbing-and-Porcelain)** - How Git works under the hood
 - **Data Structures and Algorithms in C++** by Adam Drozdek
 
-### Inspirations
+
 - [Git Source Code](https://github.com/git/git) - The original implementation
 - [Gitlet](http://gitlet.maryrosecook.com/) - JavaScript educational VCS
 - [ugit](https://www.leshenko.net/p/ugit/) - Python Git implementation
