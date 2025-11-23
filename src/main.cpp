@@ -5,6 +5,7 @@
 #include "commands/commit.h"
 #include "commands/log.h"
 #include "commands/status.h"
+#include "commands/remove.h"
 using namespace std;
 
 int main(int argc, char* argv[]) {
@@ -44,7 +45,15 @@ int main(int argc, char* argv[]) {
     }
 
     else if (command == "status") {
-    vcs_status();
+        vcs_status();
+    }
+
+    else if (command == "rm") {
+        if (argc < 3) {
+            cout << "Usage: vcs rm <filename>\n";
+            return 1;
+        }
+        vcs_remove(argv[2]);
     }
 
     else {
