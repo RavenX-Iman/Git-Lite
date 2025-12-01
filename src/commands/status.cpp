@@ -16,6 +16,7 @@
 
 using namespace std;
 
+// Read entire file content
 string getFileContent(const string &path)
 {
     ifstream file(path, ios::binary);
@@ -24,15 +25,60 @@ string getFileContent(const string &path)
                    istreambuf_iterator<char>());
 }
 
+// NEW: Read metadata of last commit
+unordered_map<string, string> readCommitMeta(const string& commitHash)
+{
+    unordered_map<string, string> meta;
+    string path = ".gitlite/commits/" + commitHash + "/meta";
+
+    ifstream file(path);
+    if (!file) return meta;
+
+    string line;
+    while (getline(file, line)) {
+        size_t pos = line.find(':');
+        if (pos != string::npos) {
+            string key = line.substr(0, pos);
+            string value = line.substr(pos + 1);
+            if (!value.empty() && value[0] == ' ')
+                value.erase(0, 1); // remove leading space
+            meta[key] = value;
+        }
+    }
+    return meta;
+}
+
 void vcs_status()
 {
     string indexPath = ".gitlite/index";
     unordered_map<string, string> stagedFiles; // filename -> hash
 
+    cout << "=== Status ===\n\n";
+
+    // NEW: Show last commit information
+    string lastCommitHash;
+    {
+        ifstream head(".gitlite/HEAD");
+        if (head) getline(head, lastCommitHash);
+    }
+
+    if (!lastCommitHash.empty()) {
+        auto meta = readCommitMeta(lastCommitHash);
+
+        cout << "Last Commit:\n";
+        cout << "  Hash:      " << lastCommitHash << "\n";
+        if (meta.count("author"))
+            cout << "  Author:    " << meta["author"] << "\n";
+        if (meta.count("ip"))
+            cout << "  IP:        " << meta["ip"] << "\n";
+        if (meta.count("timestamp"))
+            cout << "  Time:      " << meta["timestamp"] << "\n";
+        cout << "\n";
+    }
+
     // Read staged files from index
     ifstream index(indexPath);
     if (!index) {
-        cout << "=== Status ===\n";
         cout << "Nothing staged (run 'vcs add <file>' to stage files)\n";
         return;
     }
@@ -41,7 +87,6 @@ void vcs_status()
     while (getline(index, line)) {
         if (line.empty()) continue;
         
-        // Parse "hash filename" format
         size_t spacePos = line.find(' ');
         if (spacePos != string::npos) {
             string hash = line.substr(0, spacePos);
@@ -50,8 +95,6 @@ void vcs_status()
         }
     }
     index.close();
-
-    cout << "=== Status ===\n\n";
 
     if (stagedFiles.empty()) {
         cout << "Nothing staged for commit\n";
@@ -64,7 +107,7 @@ void vcs_status()
 
     cout << "\n";
 
-    // Check for untracked files in current directory
+    // Check for untracked files
     unordered_set<string> untrackedFiles;
 
 #ifdef _WIN32
@@ -75,7 +118,6 @@ void vcs_status()
         do {
             string name = findData.cFileName;
             if (name != "." && name != ".." && name != ".gitlite") {
-                // Check if it's a regular file (not directory)
                 if (!(findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) {
                     if (stagedFiles.find(name) == stagedFiles.end()) {
                         untrackedFiles.insert(name);
