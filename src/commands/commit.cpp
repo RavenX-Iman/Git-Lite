@@ -73,7 +73,7 @@ void vcs_commit(const string &message)
 
     commitContent += "message: " + message + "\n";
     commitContent += "author: " + authorName + "\n";
-    commitContent += "author_ip: " + ip + "\n";   // <-- NEW
+    commitContent += "author_ip: " + ip + "\n";
     commitContent += "date: " + getCurrentTime() + "\n";
     commitContent += "files:\n";
 
