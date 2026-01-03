@@ -2,15 +2,18 @@
 #include <fstream>
 #include <string>
 #include <ctime>
+#include <cstdlib>
+#include <sstream>
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <windows.h>
+#include "../utils/path_helper.hpp"  // ADD THIS LINE
 #pragma comment(lib, "ws2_32.lib")
 
 using namespace std;
 
 // -----------------------------
-// GET CURRENT DATE-TIME
+// HELPER FUNCTIONS
 // -----------------------------
 string getCurrentTime()
 {
@@ -32,9 +35,6 @@ string getAuthorName()
     return "Unknown User";
 }
 
-// -----------------------------
-// GET LOCAL MACHINE IP ADDRESS
-// -----------------------------
 string getIPAddress()
 {
     WSADATA wsaData;
@@ -48,6 +48,48 @@ string getIPAddress()
 
     WSACleanup();
     return string(ip);
+}
+
+
+
+// -----------------------------
+// GET HMAC SIGNATURE
+// -----------------------------
+string getHMACSignature(const string& commitData, const string& keyPath) {
+    // Get project root (Git-Lite directory)
+    string projectRoot = getExecutableDir();
+    string scriptPath = projectRoot + "\\sha\\hmac_sign.py";
+    
+    // Write commit data to temp file
+    ofstream tempData("tmp_commit_data.txt");
+    tempData << commitData;
+    tempData.close();
+    
+    // Build command - pass data via stdin (< redirection)
+    string command = "python \"" + scriptPath + "\" \"" + keyPath + "\" < tmp_commit_data.txt > tmp_hmac.txt 2>&1";
+    
+    system(command.c_str());
+    
+    // Read signature from output file
+    string signature;
+    ifstream infile("tmp_hmac.txt");
+    if (infile.is_open()) {
+        string line;
+        while (getline(infile, line)) {
+            // Only take lines that look like valid signatures (64 hex chars)
+            if (line.length() == 64 && line.find("ERROR") == string::npos && line.find("Usage") == string::npos) {
+                signature = line;
+                break;
+            }
+        }
+        infile.close();
+    }
+    
+    // Clean up
+    remove("tmp_hmac.txt");
+    remove("tmp_commit_data.txt");
+    
+    return signature;
 }
 
 // -----------------------------
@@ -67,22 +109,18 @@ void vcs_commit(const string &message)
     string line, commitContent;
     bool hasFiles = false;
 
-    // Author + IP
+    // Get commit metadata
     string authorName = getAuthorName(); 
     string ip = getIPAddress();
+    string timestamp = getCurrentTime();
 
-    commitContent += "message: " + message + "\n";
-    commitContent += "author: " + authorName + "\n";
-    commitContent += "author_ip: " + ip + "\n";
-    commitContent += "date: " + getCurrentTime() + "\n";
-    commitContent += "files:\n";
-
-    // Read index (files staged for commit)
+    // Build file list
+    string filesList;
     while (getline(index, line))
     {
         if (!line.empty())
         {
-            commitContent += "  " + line + "\n";
+            filesList += "  " + line + "\n";
             hasFiles = true;
         }
     }
@@ -94,11 +132,7 @@ void vcs_commit(const string &message)
         return;
     }
 
-    // Generate commit hash
-    size_t commitHashValue = hash<string>{}(commitContent + to_string(time(0)));
-    string commitHash = to_string(commitHashValue);
-
-    // Read HEAD to know branch
+    // Get parent commit
     ifstream headFile(".gitlite/HEAD");
     string refPath;
     getline(headFile, refPath);
@@ -110,8 +144,6 @@ void vcs_commit(const string &message)
         branchName = refPath.substr(pos + 11);
 
     string branchPath = ".gitlite/branches/" + branchName;
-
-    // Get parent commit
     ifstream branch(branchPath);
     string parent;
     getline(branch, parent);
@@ -120,10 +152,49 @@ void vcs_commit(const string &message)
     if (parent.empty() || parent == "null")
         parent = "null";
 
-    // Final commit content
-    commitContent = "commit: " + commitHash + "\n" +
-                    "parent: " + parent + "\n" +
-                    commitContent;
+    // Generate commit hash
+    string preHashContent = message + authorName + ip + timestamp + filesList;
+    size_t commitHashValue = hash<string>{}(preHashContent + to_string(time(0)));
+    string commitHash = to_string(commitHashValue);
+
+    // ========================================
+    // CREATE CANONICAL COMMIT STRING FOR HMAC
+    // ========================================
+    stringstream canonicalData;
+    canonicalData << "commit:" << commitHash << "|"
+                  << "parent:" << parent << "|"
+                  << "author:" << authorName << "|"
+                  << "author_ip:" << ip << "|"
+                  << "date:" << timestamp << "|"
+                  << "message:" << message << "|"
+                  << "files:" << filesList;
+    
+    string commitDataForHMAC = canonicalData.str();
+    
+    // Generate HMAC signature
+    string signature = "unsigned";
+    string keyPath = ".gitlite/keys/hmac.key";
+    
+    ifstream keyCheck(keyPath);
+    if (keyCheck.good()) {
+        keyCheck.close();
+        signature = getHMACSignature(commitDataForHMAC, keyPath);
+        
+        if (signature.empty() || signature.find("ERROR") != string::npos) {
+            signature = "signing_failed";
+        }
+    }
+    // ========================================
+
+    // Build final commit content
+    commitContent = "commit: " + commitHash + "\n";
+    commitContent += "parent: " + parent + "\n";
+    commitContent += "message: " + message + "\n";
+    commitContent += "author: " + authorName + "\n";
+    commitContent += "author_ip: " + ip + "\n";
+    commitContent += "date: " + timestamp + "\n";
+    commitContent += "signature: " + signature + "\n";
+    commitContent += "files:\n" + filesList;
 
     // Save commit file
     string commitFile = ".gitlite/commits/" + commitHash + ".txt";
@@ -142,4 +213,12 @@ void vcs_commit(const string &message)
 
     // Output success message
     cout << "Committed as " << commitHash << ": " << message << "\n";
+    
+    if (signature != "unsigned" && signature != "signing_failed") {
+        cout << "Signature: " << signature.substr(0, 16) << "...\n";
+    } else if (signature == "unsigned") {
+        cout << "Warning: Commit unsigned (no HMAC key found)\n";
+    } else {
+        cout << "Warning: Signature generation failed\n";
+    }
 }

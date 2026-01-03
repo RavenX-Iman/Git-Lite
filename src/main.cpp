@@ -1,21 +1,24 @@
 #include <iostream>
 #include <string>
+#include <cstdlib>
+#include <fstream>
 #include "commands/init.h"
 #include "commands/add.h"
 #include "commands/commit.h"
 #include "commands/log.h"
 #include "commands/status.h"
 #include "commands/remove.h"
+#include "utils/path_helper.hpp"
+
 using namespace std;
 
-// Code used to run hash on commit function
-#include <iostream>
-#include <string>
-#include <cstdlib>
-#include <fstream>  
-
-std::string getSHA256(const std::string& input) {
-    std::string command = "python ../sha/sha_module.py \"" + input + "\"";
+// Updated getSHA256 with correct path
+string getSHA256(const string& input) {
+    // Get project root directory
+    string projectRoot = getExecutableDir();
+    string scriptPath = projectRoot + "\\sha\\sha_module.py";
+    
+    string command = "python \"" + scriptPath + "\" \"" + input + "\"";
     
     // Append redirect to a temp file
     command += " > tmp_hash.txt";
@@ -23,19 +26,18 @@ std::string getSHA256(const std::string& input) {
     system(command.c_str());
 
     // Read the hash from the temp file
-    std::string hash;
-    std::ifstream infile("tmp_hash.txt");
+    string hash;
+    ifstream infile("tmp_hash.txt");
     if (infile.is_open()) {
-        std::getline(infile, hash);
+        getline(infile, hash);
         infile.close();
     }
 
-    // Optional: delete temp file
-    system("del tmp_hash.txt");
+    // Delete temp file
+    remove("tmp_hash.txt");
 
     return hash;
 }
-
 
 int main(int argc, char* argv[]) {
     if (argc < 2) {
@@ -61,23 +63,23 @@ int main(int argc, char* argv[]) {
         vcs_add(argv[2]);
     }
 
-    //Code to apply SHA-256 on the commit part
+    // Code to apply SHA-256 on the commit part
     else if (command == "commit") {
-    if (argc < 4 || std::string(argv[2]) != "-m") {
-        std::cout << "Usage: vcs commit -m \"message\"\n";
-        return 1;
+        if (argc < 4 || string(argv[2]) != "-m") {
+            cout << "Usage: vcs commit -m \"message\"\n";
+            return 1;
+        }
+
+        string message = argv[3];
+
+        // Get SHA-256 of the commit message
+        string commitHash = getSHA256(message);
+
+        cout << "Commit SHA-256: " << commitHash << "\n";
+
+        // Call your existing commit function
+        vcs_commit(message);
     }
-
-    std::string message = argv[3];
-
-    // Get SHA-256 of the commit message
-    std::string commitHash = getSHA256(message);
-
-    std::cout << "Commit SHA-256: " << commitHash << "\n";
-
-    // Call your existing commit function
-    vcs_commit(message);
-}
 
     else if (command == "log") {
         vcs_log();
@@ -98,13 +100,6 @@ int main(int argc, char* argv[]) {
     else {
         cout << "Unknown command: " << command << "\n";
     }
-
-    // Sha-256 applied on main.cpp
-
-    // std::cout << "Calling Python SHA module...\n";
-
-    // // Call Python SHA module with default string
-    // system("python ../sha/sha_module.py");
 
     return 0;
 }
